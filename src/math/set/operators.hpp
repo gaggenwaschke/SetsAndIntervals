@@ -29,3 +29,17 @@ constexpr auto operator|(math::set::set auto &left,
     return math::set::flattening_view{math::set::disjunction{}, left, right};
   }
 }
+
+// Symmetric Difference
+
+constexpr auto operator^(math::set::set auto &left,
+                         math::set::set auto &right) noexcept {
+  if constexpr (math::set::is_empty_set<decltype(left)>) {
+    return right;
+  } else if constexpr (math::set::is_empty_set<decltype(right)>) {
+    return left;
+  } else {
+    return math::set::flattening_view{math::set::symmetric_difference{}, left,
+                                      right};
+  }
+}

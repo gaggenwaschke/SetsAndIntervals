@@ -16,6 +16,11 @@ struct disjunction {
     return (args || ...);
   };
 };
+struct symmetric_difference {
+  constexpr auto operator()(const auto &...args) -> bool {
+    return (args ^ ...);
+  }
+};
 
 /**
  * @brief Non owning view that represents the concatination of the underlying

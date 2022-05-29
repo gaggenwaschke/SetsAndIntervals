@@ -50,3 +50,25 @@ TEST_CASE("math::set operator disjunction", "[]") {
   CHECK(math::set::contains(disjunction, 5));
   CHECK_FALSE(math::set::contains(disjunction, mock::NonComparable{}));
 }
+
+TEST_CASE("math::set operator symmetric difference", "[]") {
+  constexpr static std::array<int, 3> a1{1, 2, 3};
+  constexpr static std::array<int, 2> a2{3, 4};
+
+  math::set::empty empty{};
+
+  CHECK((empty ^ empty) == empty);
+  CHECK((a1 ^ empty) == a1);
+  CHECK((empty ^ a1) == a1);
+
+  constexpr static auto symm_difference = a1 ^ a2;
+
+  CHECK(math::set::set<decltype(symm_difference)>);
+  CHECK_FALSE(math::set::contains(symm_difference, 0));
+  CHECK(math::set::contains(symm_difference, 1));
+  CHECK(math::set::contains(symm_difference, 2));
+  CHECK_FALSE(math::set::contains(symm_difference, 3));
+  CHECK(math::set::contains(symm_difference, 4));
+  CHECK_FALSE(math::set::contains(symm_difference, 5));
+  CHECK_FALSE(math::set::contains(symm_difference, mock::NonComparable{}));
+}
