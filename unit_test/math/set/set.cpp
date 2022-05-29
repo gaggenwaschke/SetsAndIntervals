@@ -1,5 +1,6 @@
 
 #include <catch2/catch.hpp>
+#include <math/interval.hpp>
 #include <math/set/set.hpp>
 
 #include <array>
@@ -54,12 +55,15 @@ TEST_CASE("math::set::is_subset_of", "[]") {
   std::tuple subset{1, "hello"};
   std::tuple superset{"hello", 2, 4, 1};
   std::array<int, 3> not_a_subset{1, 2, 3};
+  math::interval interval{1, 2};
 
   CHECK(math::set::is_subset_of(math::set::empty{}, math::set::empty{}));
   CHECK(math::set::is_subset_of(math::set::empty{}, subset));
   CHECK(math::set::is_subset_of(math::set::empty{}, superset));
   CHECK(math::set::is_subset_of(math::set::empty{}, not_a_subset));
+  CHECK(math::set::is_subset_of(math::set::empty{}, interval));
   CHECK(math::set::is_subset_of(subset, superset));
+  CHECK(math::set::is_subset_of(interval, superset));
   CHECK_FALSE(math::set::is_subset_of(not_a_subset, superset));
   CHECK_FALSE(math::set::is_subset_of(superset, subset));
 }

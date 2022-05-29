@@ -4,6 +4,8 @@
 #include <math/set/empty.hpp>
 #include <math/set/set.hpp>
 
+#include <limits>
+
 namespace math {
 template <typename Number, bool InclusiveLow = true, bool InclusiveHigh = false>
 struct interval {
@@ -17,7 +19,9 @@ struct interval {
   constexpr interval &operator=(const interval &) noexcept = default;
   constexpr interval &operator=(interval &&) noexcept = default;
 
-  constexpr interval(Number low, Number high) noexcept : low{low}, high{high} {
+  constexpr interval(Number low = std::numeric_limits<Number>::min(),
+                     Number high = std::numeric_limits<Number>::max()) noexcept
+      : low{low}, high{high} {
     static_assert(::math::set::set<interval>,
                   "math::interval must work as set.");
   }

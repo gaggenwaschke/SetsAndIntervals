@@ -12,6 +12,7 @@ add_executable(unit_test
     catch_main.cpp
     math/interval.cpp
     math/set/flattening_view.cpp
+    math/set/number.cpp
     math/set/operators.cpp
     math/set/set.cpp)
     
