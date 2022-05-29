@@ -8,7 +8,6 @@
 #include <ranges>
 #include <tuple>
 
-
 namespace math::set {
 // Empty set
 constexpr auto contains(const auto &any_set, const auto &value)
@@ -65,7 +64,7 @@ constexpr auto contains(const std::tuple<Elements...> &tuple, const auto &value)
 }
 
 template <typename Candidate>
-concept set = requires(const Candidate &candidate) {
+concept set = is_empty_set<Candidate> || requires(const Candidate &candidate) {
   { contains(candidate, empty{}) } -> std::same_as<bool>;
   { contains(candidate, int{1}) } -> std::same_as<bool>;
 };
@@ -75,4 +74,5 @@ static_assert(set<std::array<int, 3>>, "Array must work as a set.");
 static_assert(set<std::vector<int>>, "Vector must work as a set.");
 static_assert(set<std::tuple<int, char>>, "Tuple must work as a set.");
 static_assert(set<interval<int>>, "math::interval must work as a set.");
+static_assert(set<empty>, "math::set::empty must work as set.");
 } // namespace math::set
