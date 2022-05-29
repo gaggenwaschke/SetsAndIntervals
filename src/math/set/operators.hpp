@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <math/set/flattening_view.hpp>
 #include <math/set/set.hpp>
 #include <ranges>
 
@@ -22,9 +23,10 @@ operator|(empty, set auto &right) requires(!is_empty_set<decltype(right)>) {
   return right;
 }
 
-constexpr auto operator|(set auto &left, set auto &right) requires(
-    std::ranges::range<decltype(left)> &&std::ranges::range<decltype(right)>) {
-  using left_value_type = std::ranges::range_value_t<decltype(left)>;
-  using right_value_type = std::ranges::range_value_t<decltype(right)>;
-}
 } // namespace math::set
+constexpr auto operator|(math::set::set auto &left,
+                         math::set::set auto &right) noexcept
+    requires(!math::set::is_empty_set<decltype(left)> &&
+             !math::set::is_empty_set<decltype(right)>) {
+  return math::set::flattening_view{left, right};
+}

@@ -23,23 +23,17 @@ struct interval {
   }
 
   // Methods.
-  constexpr auto contains(const auto &value) const noexcept
-      -> bool requires(set::is_empty_set<decltype(value)>) {
-    return true;
-  }
-
-  constexpr auto contains(const auto &value) const noexcept -> bool requires(
-      !set::is_empty_set<decltype(value)> &&
-      !std::three_way_comparable_with<decltype(value), number_type>) {
-    return false;
-  }
-
-  constexpr auto contains(const auto &value) const -> bool requires(
-      !set::is_empty_set<decltype(value)> &&
-      std::three_way_comparable_with<decltype(value), number_type>) {
-    bool lower_bound = InclusiveLow ? (value >= low) : (value > low);
-    bool upper_bound = InclusiveHigh ? (value <= high) : (value < high);
-    return lower_bound && upper_bound;
+  constexpr auto contains(const auto &value) const noexcept -> bool {
+    if constexpr (set::is_empty_set<decltype(value)>) {
+      return true;
+    } else if constexpr (!std::three_way_comparable_with<decltype(value),
+                                                         number_type>) {
+      return false;
+    } else {
+      bool lower_bound = InclusiveLow ? (value >= low) : (value > low);
+      bool upper_bound = InclusiveHigh ? (value <= high) : (value < high);
+      return lower_bound && upper_bound;
+    }
   }
 
   // Members.

@@ -22,20 +22,22 @@ requires(set<Sets> &&...) struct flattening_view {
   constexpr flattening_view &operator=(const flattening_view &) = default;
   constexpr flattening_view &operator=(flattening_view &&) = default;
 
-  constexpr flattening_view(Sets &...sets) : sets{sets...} {
+  constexpr flattening_view(Sets &...sets) noexcept : sets{sets...} {
     static_assert(::math::set::set<flattening_view>,
                   "math::set::flattening_view must work as a set.");
   }
 
   // Methods.
-  constexpr auto contains(empty) const noexcept -> bool { return true; }
-  constexpr auto contains(const auto &value) const
-      -> bool requires(!is_empty_set<decltype(value)>) {
-    return std::apply(
-        [&value](const auto &...sets) {
-          return (::math::set::contains(sets, value) || ...);
-        },
-        sets);
+  constexpr auto contains(const auto &value) const -> bool {
+    if constexpr (is_empty_set<decltype(value)>) {
+      return true;
+    } else {
+      return std::apply(
+          [&value](const auto &...sets) {
+            return (::math::set::contains(sets, value) || ...);
+          },
+          sets);
+    }
   }
 
   // Members.

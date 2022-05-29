@@ -18,11 +18,12 @@ TEST_CASE("math::set operator conjunction", "[]") {
   CHECK((a2 | empty) == a2);
   CHECK((empty | a2) == a2);
 
-  //  constexpr static auto disjunction = a1 | a2;
-  //  CHECK(std::same_as<decltype(disjunction), std::array<int, 5>>);
-  //  CHECK(math::set::contains(disjunction, 1));
-  //  CHECK(math::set::contains(disjunction, 2));
-  //  CHECK(math::set::contains(disjunction, 3));
-  //  CHECK(math::set::contains(disjunction, 4));
-  //  CHECK(math::set::contains(disjunction, 5));
+  constexpr static auto disjunction = a1 | a2;
+  CHECK(math::set::set<decltype(disjunction)>);
+  CHECK_FALSE(math::set::contains(disjunction, 0));
+  CHECK(math::set::contains(disjunction, 1));
+  CHECK(math::set::contains(disjunction, 2));
+  CHECK(math::set::contains(disjunction, 3));
+  CHECK(math::set::contains(disjunction, 4));
+  CHECK(math::set::contains(disjunction, 5));
 }

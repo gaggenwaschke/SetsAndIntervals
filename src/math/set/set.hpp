@@ -9,64 +9,54 @@
 
 namespace math::set {
 
+namespace {
+template <typename> struct is_tuple : std::false_type {};
+
+template <typename... TupleElements>
+struct is_tuple<std::tuple<TupleElements...>> : std::true_type {};
+
+constexpr auto tuple_element_equals_any(const auto &element,
+                                        const auto &value) noexcept -> bool {
+  if constexpr (std::equality_comparable_with<decltype(element),
+                                              decltype(value)>) {
+    return element == value;
+  } else {
+    return false;
+  }
+}
+} // namespace
+
 template <typename Set>
 concept set_members = requires(const Set &set) {
   { set.contains(empty{}) } -> std::same_as<bool>;
   { set.template contains<int>(1) } -> std::same_as<bool>;
 };
 
-// Empty set
 constexpr auto contains(const auto &any_set, const auto &value) noexcept
-    -> bool requires(is_empty_set<decltype(value)>) {
-  return true;
-}
+    -> bool {
+  using set_type = std::remove_cvref_t<decltype(any_set)>;
+  using value_type = std::remove_cvref_t<decltype(value)>;
 
-// Ranges
-constexpr auto contains(const std::ranges::range auto &range,
-                        const auto &value) noexcept
-    -> bool requires(
-        !is_empty_set<decltype(value)> &&
-        !std::equality_comparable_with<
-            decltype(value), std::ranges::range_value_t<decltype(range)>>) {
-  return false;
-}
-
-constexpr auto contains(const std::ranges::range auto &range, const auto &value)
-    -> bool requires(
-        !is_empty_set<decltype(value)> &&
-        std::equality_comparable_with<
-            decltype(value), std::ranges::range_value_t<decltype(range)>>) {
-  return std::ranges::find(range, value) != std::cend(range);
-}
-
-// Tuples
-constexpr auto tuple_element_equals_any(const auto &element,
-                                        const auto &value) noexcept
-    -> bool requires(
-        !std::equality_comparable_with<decltype(element), decltype(value)>) {
-  return false;
-}
-
-constexpr auto tuple_element_equals_any(const auto &element, const auto &value)
-    -> bool requires(
-        std::equality_comparable_with<decltype(element), decltype(value)>) {
-  return element == value;
-}
-
-template <typename... Elements>
-constexpr auto contains(const std::tuple<Elements...> &tuple, const auto &value)
-    -> bool requires(!is_empty_set<decltype(value)>) {
-  return std::apply(
-      [&value](const auto &...element) {
-        return (tuple_element_equals_any(element, value) || ...);
-      },
-      tuple);
-}
-
-// Data types that supply their own "contains" implementation.
-constexpr auto contains(const set_members auto &set, const auto &value)
-    -> bool requires(!is_empty_set<decltype(value)>) {
-  return set.template contains<decltype(value)>(value);
+  if constexpr (is_empty_set<value_type>) {
+    return true;
+  } else if constexpr (std::ranges::range<set_type>) {
+    if constexpr (std::equality_comparable_with<
+                      value_type, std::ranges::range_value_t<set_type>>) {
+      return std::ranges::find(any_set, value) != std::cend(any_set);
+    } else {
+      return false;
+    }
+  } else if constexpr (is_tuple<set_type>::value) {
+    return std::apply(
+        [&value](const auto &...element) {
+          return (tuple_element_equals_any(element, value) || ...);
+        },
+        any_set);
+  } else {
+    static_assert(set_members<set_type>,
+                  "Set does not define a contains member function!");
+    return any_set.template contains<value_type>(value);
+  }
 }
 
 template <typename Candidate>
