@@ -52,7 +52,8 @@ requires(set<Sets> &&...) struct flattening_view {
     } else {
       return std::apply(
           [&value](const auto &...sets) {
-            return FlatteningOperation{}(::math::set::contains(sets, value)...);
+            return FlatteningOperation{}(
+                ::math::set::element_of(value, sets)...);
           },
           sets);
     }

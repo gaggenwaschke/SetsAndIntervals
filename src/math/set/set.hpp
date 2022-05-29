@@ -32,10 +32,18 @@ concept set_members = requires(const Set &set) {
   { set.template contains<int>(1) } -> std::same_as<bool>;
 };
 
-constexpr auto contains(const auto &any_set, const auto &value) noexcept
+/**
+ * @brief Is-in or element operation.
+ *
+ * @param any_set
+ * @param value
+ * @return true
+ * @return false
+ */
+constexpr auto element_of(const auto &value, const auto &any_set) noexcept
     -> bool {
-  using set_type = std::remove_cvref_t<decltype(any_set)>;
   using value_type = std::remove_cvref_t<decltype(value)>;
+  using set_type = std::remove_cvref_t<decltype(any_set)>;
 
   if constexpr (is_empty_set<value_type>) {
     return true;
@@ -61,8 +69,8 @@ constexpr auto contains(const auto &any_set, const auto &value) noexcept
 
 template <typename Candidate>
 concept set = is_empty_set<Candidate> || requires(const Candidate &candidate) {
-  { ::math::set::contains(candidate, empty{}) } -> std::same_as<bool>;
-  { ::math::set::contains(candidate, int{1}) } -> std::same_as<bool>;
+  { ::math::set::element_of(empty{}, candidate) } -> std::same_as<bool>;
+  { ::math::set::element_of(int{1}, candidate) } -> std::same_as<bool>;
 };
 
 // Static assertions.

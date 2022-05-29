@@ -23,10 +23,10 @@ TEST_CASE("math::set::contains for intervals", "[]") {
   math::interval interval{1, 3};
 
   CHECK(math::set::set<decltype(interval)>);
-  CHECK(math::set::contains(interval, math::set::empty{}));
-  CHECK_FALSE(math::set::contains(interval, 0));
-  CHECK(math::set::contains(interval, 1));
-  CHECK(math::set::contains(interval, 2));
-  CHECK_FALSE(math::set::contains(interval, 3));
-  CHECK_FALSE(math::set::contains(interval, mock::NonComparable{}));
+  CHECK(math::set::element_of(math::set::empty{}, interval));
+  CHECK_FALSE(math::set::element_of(0, interval));
+  CHECK(math::set::element_of(1, interval));
+  CHECK(math::set::element_of(2, interval));
+  CHECK_FALSE(math::set::element_of(3, interval));
+  CHECK_FALSE(math::set::element_of(mock::NonComparable{}, interval));
 }

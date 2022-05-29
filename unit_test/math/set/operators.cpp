@@ -20,13 +20,13 @@ TEST_CASE("math::set operator conjunction", "[]") {
   constexpr static auto conjunction = a1 & a2;
 
   CHECK(math::set::set<decltype(conjunction)>);
-  CHECK_FALSE(math::set::contains(conjunction, 0));
-  CHECK(math::set::contains(conjunction, 1));
-  CHECK(math::set::contains(conjunction, 2));
-  CHECK_FALSE(math::set::contains(conjunction, 3));
-  CHECK_FALSE(math::set::contains(conjunction, 4));
-  CHECK_FALSE(math::set::contains(conjunction, 5));
-  CHECK_FALSE(math::set::contains(conjunction, mock::NonComparable{}));
+  CHECK_FALSE(math::set::element_of(0, conjunction));
+  CHECK(math::set::element_of(1, conjunction));
+  CHECK(math::set::element_of(2, conjunction));
+  CHECK_FALSE(math::set::element_of(3, conjunction));
+  CHECK_FALSE(math::set::element_of(4, conjunction));
+  CHECK_FALSE(math::set::element_of(5, conjunction));
+  CHECK_FALSE(math::set::element_of(mock::NonComparable{}, conjunction));
 }
 
 TEST_CASE("math::set operator disjunction", "[]") {
@@ -42,13 +42,13 @@ TEST_CASE("math::set operator disjunction", "[]") {
   constexpr static auto disjunction = a1 | a2;
 
   CHECK(math::set::set<decltype(disjunction)>);
-  CHECK_FALSE(math::set::contains(disjunction, 0));
-  CHECK(math::set::contains(disjunction, 1));
-  CHECK(math::set::contains(disjunction, 2));
-  CHECK(math::set::contains(disjunction, 3));
-  CHECK(math::set::contains(disjunction, 4));
-  CHECK(math::set::contains(disjunction, 5));
-  CHECK_FALSE(math::set::contains(disjunction, mock::NonComparable{}));
+  CHECK_FALSE(math::set::element_of(0, disjunction));
+  CHECK(math::set::element_of(1, disjunction));
+  CHECK(math::set::element_of(2, disjunction));
+  CHECK(math::set::element_of(3, disjunction));
+  CHECK(math::set::element_of(4, disjunction));
+  CHECK(math::set::element_of(5, disjunction));
+  CHECK_FALSE(math::set::element_of(mock::NonComparable{}, disjunction));
 }
 
 TEST_CASE("math::set operator symmetric difference", "[]") {
@@ -64,11 +64,11 @@ TEST_CASE("math::set operator symmetric difference", "[]") {
   constexpr static auto symm_difference = a1 ^ a2;
 
   CHECK(math::set::set<decltype(symm_difference)>);
-  CHECK_FALSE(math::set::contains(symm_difference, 0));
-  CHECK(math::set::contains(symm_difference, 1));
-  CHECK(math::set::contains(symm_difference, 2));
-  CHECK_FALSE(math::set::contains(symm_difference, 3));
-  CHECK(math::set::contains(symm_difference, 4));
-  CHECK_FALSE(math::set::contains(symm_difference, 5));
-  CHECK_FALSE(math::set::contains(symm_difference, mock::NonComparable{}));
+  CHECK_FALSE(math::set::element_of(0, symm_difference));
+  CHECK(math::set::element_of(1, symm_difference));
+  CHECK(math::set::element_of(2, symm_difference));
+  CHECK_FALSE(math::set::element_of(3, symm_difference));
+  CHECK(math::set::element_of(4, symm_difference));
+  CHECK_FALSE(math::set::element_of(5, symm_difference));
+  CHECK_FALSE(math::set::element_of(mock::NonComparable{}, symm_difference));
 }
