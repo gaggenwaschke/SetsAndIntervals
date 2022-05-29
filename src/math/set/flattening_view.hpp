@@ -22,7 +22,10 @@ requires(set<Sets> &&...) struct flattening_view {
   constexpr flattening_view &operator=(const flattening_view &) = default;
   constexpr flattening_view &operator=(flattening_view &&) = default;
 
-  constexpr flattening_view(Sets &...sets) : sets{sets...} {}
+  constexpr flattening_view(Sets &...sets) : sets{sets...} {
+    static_assert(::math::set::set<flattening_view>,
+                  "math::set::flattening_view must work as a set.");
+  }
 
   // Methods.
   constexpr auto contains(empty) const noexcept -> bool { return true; }
@@ -38,10 +41,4 @@ requires(set<Sets> &&...) struct flattening_view {
   // Members.
   std::tuple<Sets &...> sets;
 };
-
-template <typename... Sets>
-constexpr auto contains(const flattening_view<Sets...> &view, const auto &value)
-    -> bool {
-  return view.contains(value);
-}
 } // namespace math::set

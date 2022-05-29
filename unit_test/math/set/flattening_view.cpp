@@ -22,6 +22,7 @@ TEST_CASE("math::set::contains for math::set::flattening_view", "[]") {
 
   math::set::flattening_view view{a, b};
 
+  CHECK(math::set::set<decltype(view)>);
   CHECK(math::set::contains(view, math::set::empty{}));
   CHECK_FALSE(math::set::contains(view, 0));
   CHECK(math::set::contains(view, 1));

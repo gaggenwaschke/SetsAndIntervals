@@ -11,8 +11,10 @@ fetchContent_MakeAvailable(Catch2)
 add_executable(unit_test
     catch_main.cpp
     math/interval.cpp
+    math/set/flattening_view.cpp
     math/set/operators.cpp
     math/set/set.cpp)
+    
 target_link_libraries(unit_test PRIVATE
     sets_and_intervals
     Catch2::Catch2)

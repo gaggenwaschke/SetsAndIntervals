@@ -2,6 +2,7 @@
 #pragma once
 
 #include <math/set/empty.hpp>
+#include <math/set/set.hpp>
 
 namespace math {
 template <typename Number, bool InclusiveLow = true, bool InclusiveHigh = false>
@@ -16,15 +17,18 @@ struct interval {
   constexpr interval &operator=(const interval &) noexcept = default;
   constexpr interval &operator=(interval &&) noexcept = default;
 
-  constexpr interval(Number low, Number high) noexcept;
+  constexpr interval(Number low, Number high) noexcept : low{low}, high{high} {
+    static_assert(::math::set::set<interval>,
+                  "math::interval must work as set.");
+  }
 
   // Methods.
-  constexpr auto contains(const auto &value) const
+  constexpr auto contains(const auto &value) const noexcept
       -> bool requires(set::is_empty_set<decltype(value)>) {
     return true;
   }
 
-  constexpr auto contains(const auto &value) const -> bool requires(
+  constexpr auto contains(const auto &value) const noexcept -> bool requires(
       !set::is_empty_set<decltype(value)> &&
       !std::three_way_comparable_with<decltype(value), number_type>) {
     return false;
@@ -42,15 +46,4 @@ struct interval {
   Number low;
   Number high;
 };
-} // namespace math
-
-// ---
-// Implementation
-// ---
-
-namespace math {
-template <typename Number, bool InclusiveLow, bool InclusiveHigh>
-constexpr interval<Number, InclusiveLow, InclusiveHigh>::interval(
-    Number low, Number high) noexcept
-    : low{low}, high{high} {}
 } // namespace math
