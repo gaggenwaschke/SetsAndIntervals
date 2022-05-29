@@ -1,34 +1,20 @@
 
 #pragma once
 
+#include <array>
 #include <concepts>
 #include <math/interval.hpp>
 #include <math/set/empty.hpp>
 #include <ranges>
 #include <tuple>
 
-namespace math::set {
-constexpr auto contains(const auto &any_set, empty) -> bool;
-
-constexpr auto contains(const std::ranges::range auto &range, const auto &value)
-    -> bool;
-
-template <typename Number, bool InclusiveLow, bool InclusiveHigh>
-constexpr auto
-contains(const interval<Number, InclusiveLow, InclusiveHigh> &interval) -> bool;
-
-template <typename... Elements>
-constexpr auto contains(const std::tuple<Elements...> &tuple) -> bool;
-} // namespace math::set
-
-// ---
-// Implementation
-// ---
 
 namespace math::set {
-
 // Empty set
-constexpr auto contains(const auto &any_set, empty) -> bool { return true; }
+constexpr auto contains(const auto &any_set, const auto &value)
+    -> bool requires(is_empty_set<decltype(value)>) {
+  return true;
+}
 
 // Ranges
 constexpr auto contains(const std::ranges::range auto &range, const auto &value)
@@ -77,4 +63,16 @@ constexpr auto contains(const std::tuple<Elements...> &tuple, const auto &value)
       },
       tuple);
 }
+
+template <typename Candidate>
+concept set = requires(const Candidate &candidate) {
+  { contains(candidate, empty{}) } -> std::same_as<bool>;
+  { contains(candidate, int{1}) } -> std::same_as<bool>;
+};
+
+// Static assertions.
+static_assert(set<std::array<int, 3>>, "Array must work as a set.");
+static_assert(set<std::vector<int>>, "Vector must work as a set.");
+static_assert(set<std::tuple<int, char>>, "Tuple must work as a set.");
+static_assert(set<interval<int>>, "math::interval must work as a set.");
 } // namespace math::set

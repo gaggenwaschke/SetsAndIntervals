@@ -16,6 +16,7 @@ TEST_CASE("math::set::contains for math::set::empty", "[]") {
 TEST_CASE("math::set::contains for ranges", "[]") {
   std::array<int, 3> array{1, 2, 3};
 
+  CHECK(math::set::set<decltype(array)>);
   CHECK(math::set::contains(array, math::set::empty{}));
   CHECK(math::set::contains(array, 1));
   CHECK(math::set::contains(array, 2));
@@ -25,6 +26,7 @@ TEST_CASE("math::set::contains for ranges", "[]") {
   CHECK_FALSE(math::set::contains(array, mock::NonComparable{}));
 
   std::vector<int> vector{4, 5, 6};
+  CHECK(math::set::set<decltype(vector)>);
   CHECK(math::set::contains(vector, math::set::empty{}));
   CHECK(math::set::contains(vector, 4));
   CHECK(math::set::contains(vector, 5));
@@ -37,6 +39,7 @@ TEST_CASE("math::set::contains for ranges", "[]") {
 TEST_CASE("math::set::contains for tuples", "[]") {
   std::tuple tuple{1, 2, "Hello", 'W'};
 
+  CHECK(math::set::set<decltype(tuple)>);
   CHECK(math::set::contains(tuple, math::set::empty{}));
   CHECK_FALSE(math::set::contains(tuple, 0));
   CHECK(math::set::contains(tuple, 1));
@@ -50,6 +53,7 @@ TEST_CASE("math::set::contains for tuples", "[]") {
 TEST_CASE("math::set::contains for intervals", "[]") {
   math::interval interval{1, 3};
 
+  CHECK(math::set::set<decltype(interval)>);
   CHECK(math::set::contains(interval, math::set::empty{}));
   CHECK_FALSE(math::set::contains(interval, 0));
   CHECK(math::set::contains(interval, 1));
