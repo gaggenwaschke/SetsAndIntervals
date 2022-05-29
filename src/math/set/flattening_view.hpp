@@ -6,13 +6,25 @@
 #include <tuple>
 
 namespace math::set {
+struct conjunction {
+  constexpr auto operator()(const auto &...args) -> bool {
+    return (args && ...);
+  };
+};
+struct disjunction {
+  constexpr auto operator()(const auto &...args) -> bool {
+    return (args || ...);
+  };
+};
+
 /**
  * @brief Non owning view that represents the concatination of the underlying
  *        sets.
  *
- * @tparam Sets Types of the sets represnented by this.
+ * @tparam FlatteningOperation Operation used to flatten the contained sets.
+ * @tparam Sets                Types of the sets represnented by this.
  */
-template <typename... Sets>
+template <typename FlatteningOperation, typename... Sets>
 requires(set<Sets> &&...) struct flattening_view {
   // Constructors.
   flattening_view() = delete;
@@ -22,7 +34,8 @@ requires(set<Sets> &&...) struct flattening_view {
   constexpr flattening_view &operator=(const flattening_view &) = default;
   constexpr flattening_view &operator=(flattening_view &&) = default;
 
-  constexpr flattening_view(Sets &...sets) noexcept : sets{sets...} {
+  constexpr flattening_view(FlatteningOperation, Sets &...sets) noexcept
+      : sets{sets...} {
     static_assert(::math::set::set<flattening_view>,
                   "math::set::flattening_view must work as a set.");
   }
@@ -34,7 +47,7 @@ requires(set<Sets> &&...) struct flattening_view {
     } else {
       return std::apply(
           [&value](const auto &...sets) {
-            return (::math::set::contains(sets, value) || ...);
+            return FlatteningOperation{}(::math::set::contains(sets, value)...);
           },
           sets);
     }

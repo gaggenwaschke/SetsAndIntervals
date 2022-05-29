@@ -6,7 +6,7 @@ TEST_CASE("math::set::flattening_view", "[]") {
   std::array<int, 2> a{1, 2};
   std::vector<int> b{3, 4};
 
-  math::set::flattening_view view{a, b};
+  math::set::flattening_view view{math::set::disjunction{}, a, b};
 
   CHECK(view.contains(math::set::empty{}));
   CHECK_FALSE(view.contains(0));
@@ -20,7 +20,7 @@ TEST_CASE("math::set::contains for math::set::flattening_view", "[]") {
   std::array<int, 2> a{1, 2};
   std::vector<int> b{3, 4};
 
-  math::set::flattening_view view{a, b};
+  math::set::flattening_view view{math::set::disjunction{}, a, b};
 
   CHECK(math::set::set<decltype(view)>);
   CHECK(math::set::contains(view, math::set::empty{}));

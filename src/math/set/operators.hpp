@@ -5,28 +5,27 @@
 #include <math/set/set.hpp>
 #include <ranges>
 
-namespace math::set {
-
 // Conjunction
 
-constexpr auto operator&(const set auto &left, empty) -> empty { return {}; }
-constexpr auto operator&(empty, const set auto &right) -> empty
-    requires(!is_empty_set<decltype(right)>) {
-  return {};
+constexpr auto operator&(const math::set::set auto &left,
+                         const math::set::set auto &right) {
+  if constexpr (math::set::is_empty_set<decltype(left)> ||
+                math::set::is_empty_set<decltype(right)>) {
+    return math::set::empty{};
+  } else {
+    return math::set::flattening_view{math::set::conjunction{}, left, right};
+  }
 }
 
 // Disjunction
 
-constexpr auto &operator|(set auto &left, empty) { return left; }
-constexpr auto &
-operator|(empty, set auto &right) requires(!is_empty_set<decltype(right)>) {
-  return right;
-}
-
-} // namespace math::set
 constexpr auto operator|(math::set::set auto &left,
-                         math::set::set auto &right) noexcept
-    requires(!math::set::is_empty_set<decltype(left)> &&
-             !math::set::is_empty_set<decltype(right)>) {
-  return math::set::flattening_view{left, right};
+                         math::set::set auto &right) noexcept {
+  if constexpr (math::set::is_empty_set<decltype(left)>) {
+    return right;
+  } else if constexpr (math::set::is_empty_set<decltype(right)>) {
+    return left;
+  } else {
+    return math::set::flattening_view{math::set::disjunction{}, left, right};
+  }
 }
