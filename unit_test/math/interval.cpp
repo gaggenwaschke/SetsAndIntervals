@@ -4,10 +4,12 @@
 
 TEST_CASE("math::interval<int>", "[]") {
   {
-    math::interval<int> interval_int{1, 3};
-    CHECK_FALSE(interval_int.contains(0));
-    CHECK(interval_int.contains(1));
-    CHECK(interval_int.contains(2));
-    CHECK_FALSE(interval_int.contains(3));
+    math::interval<int> interval{1, 3};
+
+    CHECK(interval.contains(math::set::empty{}));
+    CHECK_FALSE(interval.contains(0));
+    CHECK(interval.contains(1));
+    CHECK(interval.contains(2));
+    CHECK_FALSE(interval.contains(3));
   }
 }
