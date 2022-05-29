@@ -53,7 +53,7 @@ requires(set<Sets> &&...) struct flattening_view {
       return std::apply(
           [&value](const auto &...sets) {
             return FlatteningOperation{}(
-                ::math::set::element_of(value, sets)...);
+                ::math::set::is_element_of(value, sets)...);
           },
           sets);
     }

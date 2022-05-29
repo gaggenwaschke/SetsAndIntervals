@@ -9,6 +9,8 @@
 
 namespace math::set {
 
+// TODO: Implement std::set support.
+
 namespace {
 template <typename> struct is_tuple : std::false_type {};
 
@@ -40,7 +42,7 @@ concept set_members = requires(const Set &set) {
  * @return true
  * @return false
  */
-constexpr auto element_of(const auto &value, const auto &any_set) noexcept
+constexpr auto is_element_of(const auto &value, const auto &any_set) noexcept
     -> bool {
   using value_type = std::remove_cvref_t<decltype(value)>;
   using set_type = std::remove_cvref_t<decltype(any_set)>;
@@ -62,16 +64,44 @@ constexpr auto element_of(const auto &value, const auto &any_set) noexcept
         any_set);
   } else {
     static_assert(set_members<set_type>,
-                  "Set does not define a contains member function!");
+                  "Set does not define math::set::set member functions!");
     return any_set.template contains<value_type>(value);
   }
 }
 
 template <typename Candidate>
 concept set = is_empty_set<Candidate> || requires(const Candidate &candidate) {
-  { ::math::set::element_of(empty{}, candidate) } -> std::same_as<bool>;
-  { ::math::set::element_of(int{1}, candidate) } -> std::same_as<bool>;
+  { ::math::set::is_element_of(empty{}, candidate) } -> std::same_as<bool>;
+  { ::math::set::is_element_of(int{1}, candidate) } -> std::same_as<bool>;
 };
+
+constexpr auto is_subset_of(const set auto &subset, const set auto &superset)
+    -> bool {
+  using subset_type = std::remove_cvref_t<decltype(subset)>;
+  using superset_type = std::remove_cvref_t<decltype(superset)>;
+
+  if constexpr (is_empty_set<subset_type>) {
+    return true;
+  } else if constexpr (is_empty_set<superset_type>) {
+    return false;
+  } else if constexpr (std::ranges::range<subset_type>) {
+    for (const auto &element : subset) {
+      if (!is_element_of(element, superset)) {
+        return false;
+      }
+    }
+    return true;
+  } else if constexpr (is_tuple<subset_type>::value) {
+    return std::apply(
+        [&superset](const auto &...elements) {
+          return (is_element_of(elements, superset) && ...);
+        },
+        subset);
+  } else {
+    static_assert(set_members<subset_type>,
+                  "Set does not define math::set::set member functions!");
+  }
+}
 
 // Static assertions.
 static_assert(set<std::array<int, 3>>, "Array must work as a set.");
