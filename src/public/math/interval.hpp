@@ -43,7 +43,7 @@ struct interval {
 
 namespace set {
 template <typename NumberLeft, typename NumberRight>
-struct custom_subset_check<interval<NumberLeft>, interval<NumberRight>> {
+struct custom_is_subset_of<interval<NumberLeft>, interval<NumberRight>> {
   constexpr bool operator()(const interval<NumberLeft> &left,
                             const interval<NumberRight> &right) const {
     return left.low >= right.low && left.high <= right.high;
@@ -52,7 +52,7 @@ struct custom_subset_check<interval<NumberLeft>, interval<NumberRight>> {
 
 template <typename Number>
   requires std::is_integral_v<Number>
-struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::natural_type> {
   constexpr bool operator()(const interval<Number> &interval,
                             numberspaces::natural_type natural) const {
     return set::is_element_of(interval.low, natural);
@@ -61,7 +61,7 @@ struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
 
 template <typename Number>
   requires std::is_floating_point_v<Number>
-struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::natural_type> {
   constexpr bool operator()(const interval<Number> &interval,
                             numberspaces::natural_type natural) const {
     return (interval.low == interval.high) &&
@@ -71,7 +71,7 @@ struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
 
 template <typename Number>
   requires(std::is_integral_v<Number> && std::is_unsigned_v<Number>)
-struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::whole_type> {
   constexpr std::true_type operator()(const interval<Number> &interval,
                                       numberspaces::whole_type) const {
     return {};
@@ -80,7 +80,7 @@ struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
 
 template <typename Number>
   requires(std::is_integral_v<Number> && std::is_signed_v<Number>)
-struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::whole_type> {
   constexpr bool operator()(const interval<Number> &interval,
                             numberspaces::whole_type whole) const {
     return set::is_element_of(interval.low, whole);
@@ -89,7 +89,7 @@ struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
 
 template <typename Number>
   requires std::is_floating_point_v<Number>
-struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::whole_type> {
   constexpr bool operator()(const interval<Number> &interval,
                             numberspaces::whole_type whole) const
 
@@ -101,7 +101,7 @@ struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
 
 template <typename Number>
   requires std::is_integral_v<Number>
-struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::integer_type> {
   constexpr std::true_type operator()(const interval<Number> &interval,
                                       numberspaces::whole_type) const {
     return {};
@@ -110,7 +110,7 @@ struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
 
 template <typename Number>
   requires std::is_floating_point_v<Number>
-struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::integer_type> {
   constexpr bool operator()(const interval<Number> &interval,
                             numberspaces::integer_type integer) const {
     return (interval.low == interval.high) &&
@@ -119,7 +119,7 @@ struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
 };
 
 template <typename Number>
-struct custom_subset_check<interval<Number>, numberspaces::real_type> {
+struct custom_is_subset_of<interval<Number>, numberspaces::real_type> {
   constexpr std::true_type operator()(const interval<Number> &interval,
                                       numberspaces::real_type real) const {
     return {};

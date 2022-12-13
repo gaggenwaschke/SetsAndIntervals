@@ -7,7 +7,7 @@
 
 namespace math {
 namespace numberspaces {
-struct real_type : integer_type {};
+struct real_type {};
 constexpr real_type real{};
 } // namespace numberspaces
 
@@ -21,6 +21,14 @@ template <typename Number>
 struct custom_is_element_of<Number, numberspaces::real_type> {
   constexpr std::true_type operator()(Number number,
                                       numberspaces::real_type) const {
+    return {};
+  }
+};
+
+template <typename Set>
+  requires std::is_base_of_v<Set, numberspaces::integer_type>
+struct custom_is_subset_of<Set, numberspaces::real_type> {
+  constexpr std::true_type operator()(Set, numberspaces::real_type) const {
     return {};
   }
 };

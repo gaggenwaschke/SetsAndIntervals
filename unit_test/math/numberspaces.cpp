@@ -13,6 +13,8 @@ TEST_CASE("Natural numbers", "[]") {
   CHECK(get_cardinality(natural) == math::infinity);
   CHECK(is_infinite<natural_type>);
 
+  CHECK(is_countable(natural));
+
   CHECK(is_element_of(1, natural));
   CHECK(is_element_of(1.0, natural));
   CHECK(is_element_of(10, natural));
@@ -31,6 +33,8 @@ TEST_CASE("Natural numbers", "[]") {
 TEST_CASE("Whole numbers", "[]") {
   CHECK(get_cardinality(whole) == math::infinity);
   CHECK(is_infinite<whole_type>);
+
+  CHECK(is_countable(whole));
 
   CHECK(is_element_of(0, whole));
   CHECK(is_element_of(0.0, whole));
@@ -53,6 +57,8 @@ TEST_CASE("Whole numbers", "[]") {
 TEST_CASE("Integers", "[]") {
   CHECK(get_cardinality(integer) == math::infinity);
   CHECK(is_infinite<integer_type>);
+
+  CHECK(is_countable(integer));
 
   CHECK(is_element_of(-1000000, integer));
   CHECK(is_element_of(-10.0, integer));
@@ -78,6 +84,8 @@ TEST_CASE("Integers", "[]") {
 TEST_CASE("Real numbers", "[]") {
   CHECK(get_cardinality(real) == math::infinity);
   CHECK(is_infinite<real_type>);
+
+  CHECK_FALSE(is_countable(real));
 
   CHECK(is_element_of(-1.1, real));
   CHECK(is_element_of(-1, real));

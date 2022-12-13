@@ -13,6 +13,7 @@ struct super : sub {};
 } // namespace mock
 
 using math::set::get_cardinality;
+using math::set::is_countable;
 using math::set::is_element_of;
 using math::set::is_subset_of;
 using math::set::set;
@@ -25,6 +26,12 @@ TEST_CASE("get_cardinality", "[]") {
   CHECK(get_cardinality(array) == 5);
   CHECK(get_cardinality(vector) == 2);
   CHECK(get_cardinality(tuple) == 3);
+}
+
+TEST_CASE("is_countable", "[set]") {
+  CHECK(is_countable(std::array<int, 4>{}));
+  CHECK(is_countable(std::vector<int>{}));
+  CHECK(is_countable(std::make_tuple(1, 2, 'c')));
 }
 
 TEST_CASE("is_element_of for math::set::empty", "[]") {
