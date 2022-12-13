@@ -12,6 +12,9 @@ struct interval {
   // Types.
   using number_type = Number;
 
+  // Assertions.
+  static_assert(::math::set::set<interval>, "math::interval must work as set.");
+
   // Constructors.
   interval() = delete;
   constexpr interval(const interval &) noexcept = default;
@@ -21,10 +24,7 @@ struct interval {
 
   constexpr interval(Number low = std::numeric_limits<Number>::min(),
                      Number high = std::numeric_limits<Number>::max()) noexcept
-      : low{low}, high{high} {
-    static_assert(::math::set::set<interval>,
-                  "math::interval must work as set.");
-  }
+      : low{low}, high{high} {}
 
   // Methods.
   constexpr auto contains(const auto &value) const noexcept -> bool {

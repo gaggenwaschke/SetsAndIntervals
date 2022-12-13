@@ -11,8 +11,8 @@ fetchContent_MakeAvailable(Catch2)
 add_executable(unit_test
     catch_main.cpp
     math/interval.cpp
+    math/numberspaces.cpp
     math/set/flattening_view.cpp
-    math/set/number.cpp
     math/set/operators.cpp
     math/set/set.cpp)
     

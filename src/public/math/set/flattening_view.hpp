@@ -5,21 +5,16 @@
 #include <math/set/set.hpp>
 #include <tuple>
 
-namespace math::set {
+namespace math {
+namespace set {
 struct conjunction {
-  constexpr auto operator()(const auto &...args) -> bool {
-    return (args && ...);
-  };
+  constexpr bool operator()(const auto &...args) { return (args && ...); };
 };
 struct disjunction {
-  constexpr auto operator()(const auto &...args) -> bool {
-    return (args || ...);
-  };
+  constexpr bool operator()(const auto &...args) { return (args || ...); };
 };
 struct symmetric_difference {
-  constexpr auto operator()(const auto &...args) -> bool {
-    return (args ^ ...);
-  }
+  constexpr bool operator()(const auto &...args) { return (args ^ ...); }
 };
 
 /**
@@ -30,24 +25,18 @@ struct symmetric_difference {
  * @tparam Sets                Types of the sets represnented by this.
  */
 template <typename FlatteningOperation, typename... Sets>
-requires(set<Sets> &&...) struct flattening_view {
+  requires(set<Sets> && ...)
+struct flattening_view {
   // Constructors.
-  flattening_view() = delete;
-
-  constexpr flattening_view(const flattening_view &) = default;
-  constexpr flattening_view(flattening_view &&) = default;
-  constexpr flattening_view &operator=(const flattening_view &) = default;
-  constexpr flattening_view &operator=(flattening_view &&) = default;
-
-  constexpr flattening_view(FlatteningOperation, Sets &...sets) noexcept
+  constexpr flattening_view(FlatteningOperation, const Sets &...sets) noexcept
       : sets{sets...} {
     static_assert(::math::set::set<flattening_view>,
                   "math::set::flattening_view must work as a set.");
   }
 
   // Methods.
-  constexpr auto contains(const auto &value) const -> bool {
-    if constexpr (is_empty_set<decltype(value)>) {
+  template <typename Value> constexpr bool contains(const Value &value) const {
+    if constexpr (is_empty_set<Value>) {
       return true;
     } else {
       return std::apply(
@@ -60,6 +49,7 @@ requires(set<Sets> &&...) struct flattening_view {
   }
 
   // Members.
-  std::tuple<Sets &...> sets;
+  std::tuple<const Sets &...> sets;
 };
-} // namespace math::set
+} // namespace set
+} // namespace math
