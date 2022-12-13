@@ -1,5 +1,5 @@
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <math/infinity.hpp>
 #include <math/numberspaces.hpp>
 #include <math/set.hpp>
@@ -7,7 +7,7 @@
 using namespace math::numberspaces;
 using namespace math::set;
 
-TEST_CASE("Natural numbers", "[]") {
+TEST_CASE("Natural numbers", "[math::numberspaces]") {
   static_assert(std::ranges::range<natural_type>);
 
   CHECK(get_cardinality(natural) == math::infinity);
@@ -30,7 +30,7 @@ TEST_CASE("Natural numbers", "[]") {
   CHECK_FALSE(is_element_of(-1.1, natural));
 }
 
-TEST_CASE("Whole numbers", "[]") {
+TEST_CASE("Whole numbers", "[math::numberspaces]") {
   CHECK(get_cardinality(whole) == math::infinity);
   CHECK(is_infinite<whole_type>);
 
@@ -54,7 +54,7 @@ TEST_CASE("Whole numbers", "[]") {
   CHECK_FALSE(is_element_of(-1.1, whole));
 }
 
-TEST_CASE("Integers", "[]") {
+TEST_CASE("Integers", "[math::numberspaces]") {
   CHECK(get_cardinality(integer) == math::infinity);
   CHECK(is_infinite<integer_type>);
 
@@ -81,7 +81,7 @@ TEST_CASE("Integers", "[]") {
   CHECK_FALSE(is_element_of(-1.1, integer));
 }
 
-TEST_CASE("Real numbers", "[]") {
+TEST_CASE("Real numbers", "[math::numberspaces]") {
   CHECK(get_cardinality(real) == math::infinity);
   CHECK(is_infinite<real_type>);
 

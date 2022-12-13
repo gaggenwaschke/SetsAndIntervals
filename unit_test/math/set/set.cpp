@@ -1,5 +1,5 @@
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <math/set.hpp>
 
 #include <array>
@@ -18,7 +18,7 @@ using math::set::is_element_of;
 using math::set::is_subset_of;
 using math::set::set;
 
-TEST_CASE("get_cardinality", "[]") {
+TEST_CASE("get_cardinality", "[math::set]") {
   std::array<int, 5> array{};
   std::vector<int> vector{1, 2};
   std::tuple<int, char, int> tuple{};
@@ -28,17 +28,17 @@ TEST_CASE("get_cardinality", "[]") {
   CHECK(get_cardinality(tuple) == 3);
 }
 
-TEST_CASE("is_countable", "[set]") {
+TEST_CASE("is_countable", "[math::set]") {
   CHECK(is_countable(std::array<int, 4>{}));
   CHECK(is_countable(std::vector<int>{}));
   CHECK(is_countable(std::make_tuple(1, 2, 'c')));
 }
 
-TEST_CASE("is_element_of for math::set::empty", "[]") {
+TEST_CASE("is_element_of for math::set::empty", "[math::set]") {
   CHECK(is_element_of(math::set::empty{}, math::set::empty{}));
 }
 
-TEST_CASE("is_element_of for ranges", "[]") {
+TEST_CASE("is_element_of for ranges", "[math::set]") {
   std::array<int, 3> array{1, 2, 3};
 
   CHECK(set<decltype(array)>);
@@ -61,7 +61,7 @@ TEST_CASE("is_element_of for ranges", "[]") {
   CHECK_FALSE(is_element_of(mock::NonComparable{}, vector));
 }
 
-TEST_CASE("is_element_of for tuples", "[]") {
+TEST_CASE("is_element_of for tuples", "[math::set]") {
   std::tuple tuple{1, 2, "Hello", 'W'};
 
   CHECK(set<decltype(tuple)>);
@@ -75,7 +75,7 @@ TEST_CASE("is_element_of for tuples", "[]") {
   CHECK_FALSE(is_element_of(mock::NonComparable{}, tuple));
 }
 
-TEST_CASE("is_subset_of", "[]") {
+TEST_CASE("is_subset_of", "[math::set]") {
   std::tuple subset{1, "hello"};
   std::tuple superset{"hello", 2, 4, 1};
   std::array<int, 3> not_a_subset{1, 2, 3};

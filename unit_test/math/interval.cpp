@@ -1,5 +1,5 @@
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <math/interval.hpp>
 #include <math/numberspaces.hpp>
 #include <math/set.hpp>
@@ -18,7 +18,7 @@ namespace mock {
 struct NonComparable {};
 } // namespace mock
 
-TEST_CASE("math::interval<int>", "[]") {
+TEST_CASE("math::interval<int>", "[math]") {
   using interval_type = interval<int>;
 
   static_assert(std::ranges::range<interval_type>);
@@ -33,7 +33,7 @@ TEST_CASE("math::interval<int>", "[]") {
   CHECK_FALSE(is_element_of(3, interval));
 }
 
-TEST_CASE("is_element_of for intervals", "[]") {
+TEST_CASE("is_element_of for intervals", "[math]") {
   math::interval interval{1, 3};
 
   CHECK(set<decltype(interval)>);
@@ -45,7 +45,7 @@ TEST_CASE("is_element_of for intervals", "[]") {
   CHECK_FALSE(is_element_of(mock::NonComparable{}, interval));
 }
 
-TEST_CASE("is_subset_of for intervals", "[]") {
+TEST_CASE("is_subset_of for intervals", "[math]") {
   std::tuple superset{"hello", 2, 4, 1};
   math::interval inner_interval{1, 2};
   math::interval outer_interval{1, 5};

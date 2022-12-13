@@ -4,12 +4,11 @@ include(FetchContent)
 fetchContent_Declare(
         Catch2
         GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG        v2.13.9
+        GIT_TAG        v3.2.1
 )
 fetchContent_MakeAvailable(Catch2)
 
 add_executable(unit_test
-    catch_main.cpp
     math/integral_iterator.cpp
     math/interval.cpp
     math/numberspaces.cpp
@@ -19,4 +18,4 @@ add_executable(unit_test
     
 target_link_libraries(unit_test PRIVATE
     sets_and_intervals
-    Catch2::Catch2)
+    Catch2::Catch2WithMain)

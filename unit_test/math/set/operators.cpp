@@ -1,8 +1,7 @@
 
 #include <array>
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <math/set.hpp>
-
 
 using math::set::empty;
 using math::set::is_element_of;
@@ -12,7 +11,7 @@ namespace mock {
 struct NonComparable {};
 } // namespace mock
 
-TEST_CASE("math::set operator conjunction", "[]") {
+TEST_CASE("math::set operator conjunction", "[math::set][operators]") {
   constexpr static std::array<int, 3> a1{1, 2, 3};
   constexpr static std::array<int, 4> a2{1, 2, 4, 5};
 
@@ -34,7 +33,7 @@ TEST_CASE("math::set operator conjunction", "[]") {
   CHECK_FALSE(is_element_of(mock::NonComparable{}, conjunction));
 }
 
-TEST_CASE("math::set operator disjunction", "[]") {
+TEST_CASE("math::set operator disjunction", "[math::set][operators]") {
   constexpr static std::array<int, 3> a1{1, 2, 3};
   constexpr static std::array<int, 2> a2{4, 5};
 
@@ -56,7 +55,7 @@ TEST_CASE("math::set operator disjunction", "[]") {
   CHECK_FALSE(is_element_of(mock::NonComparable{}, disjunction));
 }
 
-TEST_CASE("math::set operator symmetric difference", "[]") {
+TEST_CASE("math::set operator symmetric difference", "[math::set][operators]") {
   constexpr static std::array<int, 3> a1{1, 2, 3};
   constexpr static std::array<int, 2> a2{3, 4};
 
