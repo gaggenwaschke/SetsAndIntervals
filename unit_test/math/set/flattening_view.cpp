@@ -1,12 +1,13 @@
 
 #include <catch2/catch.hpp>
+#include <math/operations.hpp>
 #include <math/set/flattening_view.hpp>
 
 TEST_CASE("math::set::flattening_view", "[]") {
   std::array<int, 2> a{1, 2};
   std::vector<int> b{3, 4};
 
-  math::set::flattening_view view{math::set::disjunction{}, a, b};
+  math::set::flattening_view view{math::operations::disjunction, a, b};
 
   CHECK(view.contains(math::set::empty{}));
   CHECK_FALSE(view.contains(0));
@@ -20,7 +21,7 @@ TEST_CASE("math::set::contains for math::set::flattening_view", "[]") {
   std::array<int, 2> a{1, 2};
   std::vector<int> b{3, 4};
 
-  math::set::flattening_view view{math::set::disjunction{}, a, b};
+  math::set::flattening_view view{math::operations::disjunction, a, b};
 
   CHECK(math::set::set<decltype(view)>);
   CHECK(math::set::is_element_of(math::set::empty{}, view));

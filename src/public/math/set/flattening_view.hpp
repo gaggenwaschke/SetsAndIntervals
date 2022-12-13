@@ -7,22 +7,12 @@
 
 namespace math {
 namespace set {
-struct conjunction {
-  constexpr bool operator()(const auto &...args) { return (args && ...); };
-};
-struct disjunction {
-  constexpr bool operator()(const auto &...args) { return (args || ...); };
-};
-struct symmetric_difference {
-  constexpr bool operator()(const auto &...args) { return (args ^ ...); }
-};
-
 /**
- * @brief Non owning view that represents the concatination of the underlying
+ * @brief Non owning view that represents the concatenation of the underlying
  *        sets.
  *
  * @tparam FlatteningOperation Operation used to flatten the contained sets.
- * @tparam Sets                Types of the sets represnented by this.
+ * @tparam Sets                Types of the sets represented by this.
  */
 template <typename FlatteningOperation, typename... Sets>
   requires(set<Sets> && ...)

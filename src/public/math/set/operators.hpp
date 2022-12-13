@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include <math/set/flattening_view.hpp>
-#include <math/set/set.hpp>
+#include "math/operations.hpp"
+#include "math/set/flattening_view.hpp"
+#include "math/set/set.hpp"
 #include <ranges>
 
 // Conjunction
@@ -13,7 +14,8 @@ constexpr auto operator&(const math::set::set auto &left,
                 math::set::is_empty_set<decltype(right)>) {
     return math::set::empty{};
   } else {
-    return math::set::flattening_view{math::set::conjunction{}, left, right};
+    return math::set::flattening_view{math::operations::conjunction, left,
+                                      right};
   }
 }
 
@@ -26,7 +28,8 @@ constexpr auto operator|(math::set::set auto &left,
   } else if constexpr (math::set::is_empty_set<decltype(right)>) {
     return left;
   } else {
-    return math::set::flattening_view{math::set::disjunction{}, left, right};
+    return math::set::flattening_view{math::operations::disjunction, left,
+                                      right};
   }
 }
 
@@ -39,7 +42,7 @@ constexpr auto operator^(math::set::set auto &left,
   } else if constexpr (math::set::is_empty_set<decltype(right)>) {
     return left;
   } else {
-    return math::set::flattening_view{math::set::symmetric_difference{}, left,
-                                      right};
+    return math::set::flattening_view{math::operations::symmetric_difference,
+                                      left, right};
   }
 }

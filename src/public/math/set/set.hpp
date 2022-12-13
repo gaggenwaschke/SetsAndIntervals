@@ -1,20 +1,17 @@
 
 #pragma once
 
+#include "math/set/empty.hpp"
+#include "math/type_traits.hpp"
 #include <array>
 #include <concepts>
-#include <math/set/empty.hpp>
 #include <ranges>
 #include <tuple>
+#include <vector>
 
 namespace math {
 namespace set {
-namespace {
-template <typename> struct is_tuple : std::false_type {};
-
-template <typename... TupleElements>
-struct is_tuple<std::tuple<TupleElements...>> : std::true_type {};
-
+namespace details {
 constexpr auto tuple_element_equals_any(const auto &element,
                                         const auto &value) noexcept -> bool {
   if constexpr (std::equality_comparable_with<decltype(element),
@@ -24,7 +21,7 @@ constexpr auto tuple_element_equals_any(const auto &element,
     return false;
   }
 }
-} // namespace
+} // namespace details
 
 template <typename Set>
 concept set_members = requires(const Set &set) {
@@ -40,30 +37,28 @@ concept set_members = requires(const Set &set) {
  * @return true
  * @return false
  */
-constexpr auto is_element_of(const auto &value, const auto &any_set) noexcept
+template <typename Value, typename Set>
+constexpr auto is_element_of(const Value &value, const Set &any_set) noexcept
     -> bool {
-  using value_type = std::remove_cvref_t<decltype(value)>;
-  using set_type = std::remove_cvref_t<decltype(any_set)>;
-
-  if constexpr (is_empty_set<value_type>) {
+  if constexpr (is_empty_set<Value>) {
     return true;
-  } else if constexpr (std::ranges::range<set_type>) {
+  } else if constexpr (std::ranges::range<Set>) {
     if constexpr (std::equality_comparable_with<
-                      value_type, std::ranges::range_value_t<set_type>>) {
+                      Value, std::ranges::range_value_t<Set>>) {
       return std::ranges::find(any_set, value) != std::cend(any_set);
     } else {
       return false;
     }
-  } else if constexpr (is_tuple<set_type>::value) {
+  } else if constexpr (type_traits::is_tuple<Set>::value) {
     return std::apply(
         [&value](const auto &...element) {
-          return (tuple_element_equals_any(element, value) || ...);
+          return (details::tuple_element_equals_any(element, value) || ...);
         },
         any_set);
   } else {
-    static_assert(set_members<set_type>,
+    static_assert(set_members<Set>,
                   "Set does not define math::set::set member functions!");
-    return any_set.template contains<value_type>(value);
+    return any_set.template contains<Value>(value);
   }
 }
 
@@ -94,15 +89,14 @@ constexpr bool is_subset_of(const Subset &subset, const Superset &superset) {
       }
     }
     return true;
-  } else if constexpr (is_tuple<Subset>::value) {
+  } else if constexpr (type_traits::is_tuple<Subset>::value) {
     return std::apply(
         [&superset](const auto &...elements) {
           return (is_element_of(elements, superset) && ...);
         },
         subset);
   } else {
-    static_assert(set_members<Subset>,
-                  "Set does not define math::set::set member functions!");
+    static_assert(false, "No implementation for is_subset_of found!");
     return false;
   }
 }

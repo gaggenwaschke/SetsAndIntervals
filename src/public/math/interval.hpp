@@ -44,4 +44,6 @@ struct interval {
   Number low;
   Number high;
 };
+
+static_assert(set::set<interval<int>>, "Interval must be a set!");
 } // namespace math
