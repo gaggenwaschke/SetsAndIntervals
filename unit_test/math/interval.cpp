@@ -29,11 +29,11 @@ TEST_CASE("math::interval<int>", "[]") {
   interval_type interval{1, 3};
 
   CHECK(set<decltype(interval)>);
-  CHECK(interval.contains(empty{}));
-  CHECK_FALSE(interval.contains(0));
-  CHECK(interval.contains(1));
-  CHECK(interval.contains(2));
-  CHECK_FALSE(interval.contains(3));
+  CHECK(is_element_of(empty{}, interval));
+  CHECK_FALSE(is_element_of(0, interval));
+  CHECK(is_element_of(1, interval));
+  CHECK(is_element_of(2, interval));
+  CHECK_FALSE(is_element_of(3, interval));
 }
 
 TEST_CASE("is_element_of for intervals", "[]") {
@@ -59,6 +59,7 @@ TEST_CASE("is_subset_of for intervals", "[]") {
   CHECK(is_subset_of(inner_interval, superset));
   CHECK(is_subset_of(inner_interval, outer_interval));
   CHECK(is_subset_of(inner_interval, natural));
+
   CHECK(is_subset_of(non_natural_interval, whole));
   CHECK(is_subset_of(non_whole_interval, integer));
   CHECK(is_subset_of(floating_interval, real));

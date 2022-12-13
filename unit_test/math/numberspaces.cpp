@@ -3,89 +3,89 @@
 #include <math/numberspaces.hpp>
 #include <math/set/set.hpp>
 
-using math::numberspaces::natural;
-using math::numberspaces::whole;
 using math::numberspaces::integer;
+using math::numberspaces::natural;
 using math::numberspaces::real;
+using math::numberspaces::whole;
 
-using math::set::is_superset_of;
 using math::set::is_element_of;
+using math::set::is_superset_of;
 
 TEST_CASE("Natural numbers", "[]") {
-  CHECK(natural.contains(1));
-  CHECK(natural.contains(1.0));
-  CHECK(natural.contains(10));
-  CHECK(natural.contains(25.0));
-  CHECK(natural.contains(1000000));
+  CHECK(is_element_of(1, natural));
+  CHECK(is_element_of(1.0, natural));
+  CHECK(is_element_of(10, natural));
+  CHECK(is_element_of(25.0, natural));
+  CHECK(is_element_of(1000000, natural));
 
-  CHECK_FALSE(natural.contains(0));
-  CHECK_FALSE(natural.contains(0.9999));
-  CHECK_FALSE(natural.contains(10.1));
+  CHECK_FALSE(is_element_of(0, natural));
+  CHECK_FALSE(is_element_of(0.9999, natural));
+  CHECK_FALSE(is_element_of(10.1, natural));
 
-  CHECK_FALSE(natural.contains("Hello"));
-  CHECK_FALSE(natural.contains(-1));
-  CHECK_FALSE(natural.contains(-1.1));
+  CHECK_FALSE(is_element_of("Hello", natural));
+  CHECK_FALSE(is_element_of(-1, natural));
+  CHECK_FALSE(is_element_of(-1.1, natural));
 }
 
 TEST_CASE("Whole numbers", "[]") {
-  CHECK(whole.contains(0));
-  CHECK(whole.contains(0.0));
-  CHECK(whole.contains(1));
-  CHECK(whole.contains(1.0));
-  CHECK(whole.contains(10));
-  CHECK(whole.contains(25.0));
-  CHECK(whole.contains(1000000));
+  CHECK(is_element_of(0, whole));
+  CHECK(is_element_of(0.0, whole));
+  CHECK(is_element_of(1, whole));
+  CHECK(is_element_of(1.0, whole));
+  CHECK(is_element_of(10, whole));
+  CHECK(is_element_of(25.0, whole));
+  CHECK(is_element_of(1000000, whole));
 
   CHECK(is_superset_of(whole, natural));
 
-  CHECK_FALSE(whole.contains(-1));
-  CHECK_FALSE(whole.contains(-0.0000000001));
-  CHECK_FALSE(whole.contains(10.00001));
+  CHECK_FALSE(is_element_of(-1, whole));
+  CHECK_FALSE(is_element_of(-0.0000000001, whole));
+  CHECK_FALSE(is_element_of(10.00001, whole));
 
-  CHECK_FALSE(whole.contains("Hello"));
-  CHECK_FALSE(whole.contains(-1.1));
+  CHECK_FALSE(is_element_of("Hello", whole));
+  CHECK_FALSE(is_element_of(-1.1, whole));
 }
 
 TEST_CASE("Integers", "[]") {
-  CHECK(integer.contains(-1000000));
-  CHECK(integer.contains(-10.0));
-  CHECK(integer.contains(-1));
-  CHECK(integer.contains(0));
-  CHECK(integer.contains(0.0));
-  CHECK(integer.contains(1));
-  CHECK(integer.contains(1.0));
-  CHECK(integer.contains(10));
-  CHECK(integer.contains(25.0));
-  CHECK(integer.contains(1000000));
+  CHECK(is_element_of(-1000000, integer));
+  CHECK(is_element_of(-10.0, integer));
+  CHECK(is_element_of(-1, integer));
+  CHECK(is_element_of(0, integer));
+  CHECK(is_element_of(0.0, integer));
+  CHECK(is_element_of(1, integer));
+  CHECK(is_element_of(1.0, integer));
+  CHECK(is_element_of(10, integer));
+  CHECK(is_element_of(25.0, integer));
+  CHECK(is_element_of(1000000, integer));
 
   CHECK(is_superset_of(integer, whole));
   CHECK(is_superset_of(integer, natural));
-  
-  CHECK_FALSE(integer.contains(-0.0000000001));
-  CHECK_FALSE(integer.contains(10.00001));
 
-  CHECK_FALSE(integer.contains("Hello"));
-  CHECK_FALSE(integer.contains(-1.1));
+  CHECK_FALSE(is_element_of(-0.0000000001, integer));
+  CHECK_FALSE(is_element_of(10.00001, integer));
+
+  CHECK_FALSE(is_element_of("Hello", integer));
+  CHECK_FALSE(is_element_of(-1.1, integer));
 }
 
 TEST_CASE("Real numbers", "[]") {
-  CHECK(real.contains(-1.1));
-  CHECK(real.contains(-1));
-  CHECK(real.contains(-0.0000000001));
-  CHECK(real.contains(0));
-  CHECK(real.contains(0.0));
-  CHECK(real.contains(1));
-  CHECK(real.contains(1.0));
-  CHECK(real.contains(10));
-  CHECK(real.contains(10.00001));
-  CHECK(real.contains(25.0));
-  CHECK(real.contains(1000000));
+  CHECK(is_element_of(-1.1, real));
+  CHECK(is_element_of(-1, real));
+  CHECK(is_element_of(-0.0000000001, real));
+  CHECK(is_element_of(0, real));
+  CHECK(is_element_of(0.0, real));
+  CHECK(is_element_of(1, real));
+  CHECK(is_element_of(1.0, real));
+  CHECK(is_element_of(10, real));
+  CHECK(is_element_of(10.00001, real));
+  CHECK(is_element_of(25.0, real));
+  CHECK(is_element_of(1000000, real));
 
   CHECK(is_superset_of(real, whole));
   CHECK(is_superset_of(real, natural));
   CHECK(is_superset_of(real, integer));
 
-  CHECK_FALSE(real.contains("Hello"));
+  CHECK_FALSE(is_element_of("Hello", real));
 }
 
 TEST_CASE("is_element_of for number sets", "[]") {

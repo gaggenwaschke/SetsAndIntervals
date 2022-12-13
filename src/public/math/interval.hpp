@@ -97,20 +97,6 @@ struct interval {
                      Number high = std::numeric_limits<Number>::max()) noexcept
       : low{low}, high{high} {}
 
-  // Methods.
-  constexpr auto contains(const auto &value) const noexcept -> bool {
-    if constexpr (set::is_empty_set<decltype(value)>) {
-      return true;
-    } else if constexpr (!std::three_way_comparable_with<decltype(value),
-                                                         number_type>) {
-      return false;
-    } else {
-      bool lower_bound = value >= low;
-      bool upper_bound = value < high;
-      return lower_bound && upper_bound;
-    }
-  }
-
   constexpr auto begin() const
     requires std::is_integral_v<number_type>
   {
@@ -137,57 +123,70 @@ struct custom_subset_check<interval<NumberLeft>, interval<NumberRight>> {
 };
 
 template <typename Number>
+  requires std::is_integral_v<Number>
 struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
   constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::natural_type natural) const
-    requires std::is_integral_v<Number>
-  {
-    return natural.contains(interval.low);
-  }
-
-  constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::natural_type natural) const
-    requires std::is_floating_point_v<Number>
-  {
-    return (interval.low == interval.high) && natural.contains(interval.low);
+                            numberspaces::natural_type natural) const {
+    return set::is_element_of(interval.low, natural);
   }
 };
 
 template <typename Number>
+  requires std::is_floating_point_v<Number>
+struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::natural_type natural) const {
+    return (interval.low == interval.high) &&
+           set::is_element_of(natural, interval.low);
+  }
+};
+
+template <typename Number>
+  requires(std::is_integral_v<Number> && std::is_unsigned_v<Number>)
+struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::whole_type) const {
+    return true;
+  }
+};
+
+template <typename Number>
+  requires(std::is_integral_v<Number> && std::is_signed_v<Number>)
+struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::whole_type whole) const {
+    return set::is_element_of(interval.low, whole);
+  }
+};
+
+template <typename Number>
+  requires std::is_floating_point_v<Number>
 struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
   constexpr bool operator()(const interval<Number> &interval,
                             numberspaces::whole_type whole) const
-    requires std::is_integral_v<Number>
-  {
-    if constexpr (std::is_unsigned_v<Number>) {
-      return true;
-    } else {
-      return whole.contains(interval.low);
-    }
-  }
 
-  constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::whole_type whole) const
-    requires std::is_floating_point_v<Number>
   {
-    return (interval.low == interval.high) && whole.contains(interval.low);
+    return (interval.low == interval.high) &&
+           set::is_element_of(interval.low, whole);
   }
 };
 
 template <typename Number>
+  requires std::is_integral_v<Number>
 struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
   constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::whole_type) const
-    requires std::is_integral_v<Number>
-  {
+                            numberspaces::whole_type) const {
     return true;
   }
+};
 
+template <typename Number>
+  requires std::is_floating_point_v<Number>
+struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
   constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::integer_type integer) const
-    requires std::is_floating_point_v<Number>
-  {
-    return (interval.low == interval.high) && integer.contains(interval.low);
+                            numberspaces::integer_type integer) const {
+    return (interval.low == interval.high) &&
+           set::is_element_of(integer, interval.low);
   }
 };
 

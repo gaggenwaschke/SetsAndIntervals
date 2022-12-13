@@ -24,47 +24,46 @@ constexpr auto tuple_element_equals_any(const auto &element,
 }
 } // namespace details
 
-template <typename Set>
-concept set_members = requires(const Set &set) {
-                        { set.contains(empty{}) } -> std::same_as<bool>;
-                        { set.template contains<int>(1) } -> std::same_as<bool>;
-                      };
-
 template <typename Candidate>
 concept is_infinite_range =
     std::ranges::range<Candidate> &&
     std::same_as<std::ranges::sentinel_t<Candidate>, infinity>;
 
+template <typename Value, typename Set> struct custom_is_element_of;
+
 /**
  * @brief Is-in or element operation.
  *
- * @param any_set
+ * @param set
  * @param value
  * @return true
  * @return false
  */
 template <typename Value, typename Set>
-constexpr auto is_element_of(const Value &value, const Set &any_set) noexcept
-    -> bool {
+constexpr bool is_element_of(const Value &value, const Set &set) noexcept {
   if constexpr (is_empty_set<Value>) {
     return true;
+  } else if constexpr (is_empty_set<Set>) {
+    return false;
+  } else if constexpr (type_traits::is_complete_v<
+                           custom_is_element_of<Value, Set>>) {
+    return custom_is_element_of<Value, Set>{}(value, set);
   } else if constexpr (std::ranges::range<Set>) {
     if constexpr (std::equality_comparable_with<
                       Value, std::ranges::range_value_t<Set>>) {
-      return std::ranges::find(any_set, value) != std::cend(any_set);
+      return std::ranges::find(set, value) != std::cend(set);
     } else {
       return false;
     }
-  } else if constexpr (type_traits::is_tuple<Set>::value) {
+  } else if constexpr (type_traits::is_tuple_v<Set>) {
     return std::apply(
         [&value](const auto &...element) {
           return (details::tuple_element_equals_any(element, value) || ...);
         },
-        any_set);
+        set);
   } else {
-    static_assert(set_members<Set>,
-                  "Set does not define math::set::set member functions!");
-    return any_set.template contains<Value>(value);
+    // Fall through to false.
+    return false;
   }
 }
 
@@ -88,11 +87,13 @@ constexpr bool is_subset_of(const Subset &subset, const Superset &superset) {
     return true;
   } else if constexpr (is_empty_set<Superset>) {
     return false;
-  } else if constexpr (type_traits::is_complete<
-                           custom_subset_check<Subset, Superset>>::value) {
+  } else if constexpr (type_traits::is_complete_v<
+                           custom_subset_check<Subset, Superset>>) {
     return custom_subset_check<Subset, Superset>{}(subset, superset);
   } else if constexpr (std::is_base_of_v<Subset, Superset>) {
     return true;
+  } else if constexpr (std::is_base_of_v<Superset, Subset>) {
+    return false;
   } else if constexpr (std::ranges::range<Subset> &&
                        !is_infinite_range<Subset>) {
     for (const auto &element : subset) {
@@ -101,15 +102,16 @@ constexpr bool is_subset_of(const Subset &subset, const Superset &superset) {
       }
     }
     return true;
-  } else if constexpr (type_traits::is_tuple<Subset>::value) {
+  } else if constexpr (type_traits::is_tuple_v<Subset>) {
     return std::apply(
         [&superset](const auto &...elements) {
           return (is_element_of(elements, superset) && ...);
         },
         subset);
   } else {
-    return false; // static_assert(false, "No implementation for is_subset_of
-                  // found!");
+    static_assert(std::is_same_v<Subset, Subset &> &&
+                      std::is_same_v<Superset, Superset &>,
+                  "No implementation for is_subset_of found!");
   }
 }
 

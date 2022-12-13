@@ -24,22 +24,23 @@ struct flattening_view {
                   "math::set::flattening_view must work as a set.");
   }
 
-  // Methods.
-  template <typename Value> constexpr bool contains(const Value &value) const {
-    if constexpr (is_empty_set<Value>) {
-      return true;
-    } else {
-      return std::apply(
-          [&value](const auto &...sets) {
-            return FlatteningOperation{}(
-                ::math::set::is_element_of(value, sets)...);
-          },
-          sets);
-    }
-  }
-
   // Members.
   std::tuple<const Sets &...> sets;
+};
+
+template <typename Value, typename FlatteningOperation, typename... Sets>
+struct custom_is_element_of<Value,
+                            flattening_view<FlatteningOperation, Sets...>> {
+  constexpr bool
+  operator()(const Value &value,
+             const flattening_view<FlatteningOperation, Sets...> &view) {
+    return std::apply(
+        [&value](const auto &...sets) {
+          return FlatteningOperation{}(
+              ::math::set::is_element_of(value, sets)...);
+        },
+        view.sets);
+  }
 };
 } // namespace set
 } // namespace math
