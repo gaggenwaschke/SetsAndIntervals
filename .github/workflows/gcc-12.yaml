@@ -9,5 +9,6 @@ jobs:
   unit_test:
     uses: ./.github/workflows/generic.yaml
     with:
-      compiler: gcc-12
+      compiler_install_name: g++-12
+      compiler_run_name: g++-12
       

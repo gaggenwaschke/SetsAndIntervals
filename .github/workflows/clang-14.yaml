@@ -9,5 +9,6 @@ jobs:
   unit_test:
     uses: ./.github/workflows/generic.yaml
     with:
-      compiler: clang-14
+      compiler_install_name: clang-14
+      compiler_run_name: clang++-14
       
