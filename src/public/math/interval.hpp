@@ -136,7 +136,67 @@ struct custom_subset_check<interval<NumberLeft>, interval<NumberRight>> {
   }
 };
 
-// TODO: Custom checks for numberspaces to save time.
+template <typename Number>
+struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::natural_type natural) const
+    requires std::is_integral_v<Number>
+  {
+    return natural.contains(interval.low);
+  }
 
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::natural_type natural) const
+    requires std::is_floating_point_v<Number>
+  {
+    return (interval.low == interval.high) && natural.contains(interval.low);
+  }
+};
+
+template <typename Number>
+struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::whole_type whole) const
+    requires std::is_integral_v<Number>
+  {
+    if constexpr (std::is_unsigned_v<Number>) {
+      return true;
+    } else {
+      return whole.contains(interval.low);
+    }
+  }
+
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::whole_type whole) const
+    requires std::is_floating_point_v<Number>
+  {
+    return (interval.low == interval.high) && whole.contains(interval.low);
+  }
+};
+
+template <typename Number>
+struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::whole_type) const
+    requires std::is_integral_v<Number>
+  {
+    return true;
+  }
+
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::integer_type integer) const
+    requires std::is_floating_point_v<Number>
+  {
+    return (interval.low == interval.high) && integer.contains(interval.low);
+  }
+};
+
+template <typename Number>
+struct custom_subset_check<interval<Number>, numberspaces::real_type> {
+  constexpr bool operator()(const interval<Number> &interval,
+                            numberspaces::real_type real) const {
+    return true;
+  }
+};
 } // namespace set
 } // namespace math

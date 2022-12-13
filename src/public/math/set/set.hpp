@@ -82,9 +82,6 @@ concept set = is_empty_set<Candidate> ||
 template <typename Subset, typename Superset> struct custom_subset_check;
 
 template <typename Subset, typename Superset>
-concept has_custom_subset_check = false;
-
-template <typename Subset, typename Superset>
   requires(set<Subset> && set<Superset>)
 constexpr bool is_subset_of(const Subset &subset, const Superset &superset) {
   if constexpr (is_empty_set<Subset>) {
