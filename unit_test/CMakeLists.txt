@@ -10,6 +10,7 @@ fetchContent_MakeAvailable(Catch2)
 
 add_executable(unit_test
     catch_main.cpp
+    math/integral_iterator.cpp
     math/interval.cpp
     math/numberspaces.cpp
     math/set/flattening_view.cpp

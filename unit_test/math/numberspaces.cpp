@@ -1,17 +1,18 @@
 
 #include <catch2/catch.hpp>
+#include <math/infinity.hpp>
 #include <math/numberspaces.hpp>
 #include <math/set/set.hpp>
 
-using math::numberspaces::integer;
-using math::numberspaces::natural;
-using math::numberspaces::real;
-using math::numberspaces::whole;
-
-using math::set::is_element_of;
-using math::set::is_superset_of;
+using namespace math::numberspaces;
+using namespace math::set;
 
 TEST_CASE("Natural numbers", "[]") {
+  static_assert(std::ranges::range<natural_type>);
+
+  CHECK(get_cardinality(natural) == math::infinity);
+  CHECK(is_infinite<natural_type>);
+
   CHECK(is_element_of(1, natural));
   CHECK(is_element_of(1.0, natural));
   CHECK(is_element_of(10, natural));
@@ -28,6 +29,9 @@ TEST_CASE("Natural numbers", "[]") {
 }
 
 TEST_CASE("Whole numbers", "[]") {
+  CHECK(get_cardinality(whole) == math::infinity);
+  CHECK(is_infinite<whole_type>);
+
   CHECK(is_element_of(0, whole));
   CHECK(is_element_of(0.0, whole));
   CHECK(is_element_of(1, whole));
@@ -47,6 +51,9 @@ TEST_CASE("Whole numbers", "[]") {
 }
 
 TEST_CASE("Integers", "[]") {
+  CHECK(get_cardinality(integer) == math::infinity);
+  CHECK(is_infinite<integer_type>);
+
   CHECK(is_element_of(-1000000, integer));
   CHECK(is_element_of(-10.0, integer));
   CHECK(is_element_of(-1, integer));
@@ -69,6 +76,9 @@ TEST_CASE("Integers", "[]") {
 }
 
 TEST_CASE("Real numbers", "[]") {
+  CHECK(get_cardinality(real) == math::infinity);
+  CHECK(is_infinite<real_type>);
+
   CHECK(is_element_of(-1.1, real));
   CHECK(is_element_of(-1, real));
   CHECK(is_element_of(-0.0000000001, real));
@@ -86,14 +96,4 @@ TEST_CASE("Real numbers", "[]") {
   CHECK(is_superset_of(real, integer));
 
   CHECK_FALSE(is_element_of("Hello", real));
-}
-
-TEST_CASE("is_element_of for number sets", "[]") {
-  CHECK(is_element_of(1, natural));
-  CHECK_FALSE(is_element_of(0, natural));
-  CHECK_FALSE(is_element_of("Hi", natural));
-
-  CHECK(is_element_of(1, real));
-  CHECK(is_element_of(10000.0101, real));
-  CHECK_FALSE(is_element_of("Hi", real));
 }

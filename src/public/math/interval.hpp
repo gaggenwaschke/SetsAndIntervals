@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "math/integral_iterator.hpp"
 #include "math/numberspaces.hpp"
 #include "math/set/empty.hpp"
 #include "math/set/set.hpp"
@@ -8,78 +9,6 @@
 #include <type_traits>
 
 namespace math {
-template <typename Number>
-  requires(std::is_integral_v<Number>)
-struct integral_iterator {
-  using value_type = Number;
-  using difference_type = Number;
-  using iterator_category = std::contiguous_iterator_tag;
-
-  value_type current;
-
-  constexpr integral_iterator &operator++() {
-    ++current;
-    return *this;
-  }
-
-  constexpr integral_iterator operator++(int) {
-    integral_iterator copy{*this};
-    operator++();
-    return copy;
-  }
-
-  constexpr integral_iterator &operator--() {
-    --current;
-    return *this;
-  }
-
-  constexpr integral_iterator operator--(int) {
-    integral_iterator copy{*this};
-    operator--();
-    return copy;
-  }
-
-  constexpr integral_iterator &operator+=(Number increment) {
-    current += increment;
-    return *this;
-  }
-
-  constexpr integral_iterator &operator-=(Number decrement) {
-    current -= decrement;
-    return *this;
-  }
-
-  constexpr value_type operator*() const { return current; }
-
-  constexpr value_type operator[](value_type index) const {
-    return current += index;
-  }
-
-  friend auto operator<=>(const integral_iterator &,
-                          const integral_iterator &) = default;
-  friend value_type operator-(const integral_iterator &left,
-                              const integral_iterator &right) {
-    return left.current - right.current;
-  }
-
-  friend integral_iterator operator+(integral_iterator iterator,
-                                     value_type increment) {
-    iterator += increment;
-    return iterator;
-  }
-
-  friend integral_iterator operator-(integral_iterator iterator,
-                                     value_type decrement) {
-    iterator -= decrement;
-    return iterator;
-  }
-
-  friend constexpr integral_iterator operator+(value_type increment,
-                                               integral_iterator iterator) {
-    return iterator + increment;
-  }
-};
-
 template <typename Number>
   requires(std::is_integral_v<Number> || std::is_floating_point_v<Number>)
 struct interval {
@@ -144,9 +73,9 @@ struct custom_subset_check<interval<Number>, numberspaces::natural_type> {
 template <typename Number>
   requires(std::is_integral_v<Number> && std::is_unsigned_v<Number>)
 struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
-  constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::whole_type) const {
-    return true;
+  constexpr std::true_type operator()(const interval<Number> &interval,
+                                      numberspaces::whole_type) const {
+    return {};
   }
 };
 
@@ -174,9 +103,9 @@ struct custom_subset_check<interval<Number>, numberspaces::whole_type> {
 template <typename Number>
   requires std::is_integral_v<Number>
 struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
-  constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::whole_type) const {
-    return true;
+  constexpr std::true_type operator()(const interval<Number> &interval,
+                                      numberspaces::whole_type) const {
+    return {};
   }
 };
 
@@ -192,9 +121,9 @@ struct custom_subset_check<interval<Number>, numberspaces::integer_type> {
 
 template <typename Number>
 struct custom_subset_check<interval<Number>, numberspaces::real_type> {
-  constexpr bool operator()(const interval<Number> &interval,
-                            numberspaces::real_type real) const {
-    return true;
+  constexpr std::true_type operator()(const interval<Number> &interval,
+                                      numberspaces::real_type real) const {
+    return {};
   }
 };
 } // namespace set

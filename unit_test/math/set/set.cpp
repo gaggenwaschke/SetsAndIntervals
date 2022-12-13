@@ -8,15 +8,24 @@
 namespace mock {
 struct NonComparable {};
 
-struct sub {
-  constexpr static bool contains(const auto &) { return false; }
-};
+struct sub {};
 struct super : sub {};
 } // namespace mock
 
+using math::set::get_cardinality;
 using math::set::is_element_of;
 using math::set::is_subset_of;
 using math::set::set;
+
+TEST_CASE("get_cardinality", "[]") {
+  std::array<int, 5> array{};
+  std::vector<int> vector{1, 2};
+  std::tuple<int, char, int> tuple{};
+
+  CHECK(get_cardinality(array) == 5);
+  CHECK(get_cardinality(vector) == 2);
+  CHECK(get_cardinality(tuple) == 3);
+}
 
 TEST_CASE("is_element_of for math::set::empty", "[]") {
   CHECK(is_element_of(math::set::empty{}, math::set::empty{}));

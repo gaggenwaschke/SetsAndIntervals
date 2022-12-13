@@ -22,8 +22,6 @@ struct NonComparable {};
 TEST_CASE("math::interval<int>", "[]") {
   using interval_type = interval<int>;
 
-  static_assert(
-      std::random_access_iterator<std::ranges::iterator_t<interval_type>>);
   static_assert(std::ranges::range<interval_type>);
 
   interval_type interval{1, 3};
