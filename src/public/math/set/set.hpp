@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "math/infinity.hpp"
 #include "math/set/empty.hpp"
 #include "math/type_traits.hpp"
 #include <array>
@@ -28,6 +29,11 @@ concept set_members = requires(const Set &set) {
                         { set.contains(empty{}) } -> std::same_as<bool>;
                         { set.template contains<int>(1) } -> std::same_as<bool>;
                       };
+
+template <typename Candidate>
+concept is_infinite_range =
+    std::ranges::range<Candidate> &&
+    std::same_as<std::ranges::sentinel_t<Candidate>, infinity>;
 
 /**
  * @brief Is-in or element operation.
@@ -73,6 +79,11 @@ concept set = is_empty_set<Candidate> ||
                   } -> std::same_as<bool>;
               };
 
+template <typename Subset, typename Superset> struct custom_subset_check;
+
+template <typename Subset, typename Superset>
+concept has_custom_subset_check = false;
+
 template <typename Subset, typename Superset>
   requires(set<Subset> && set<Superset>)
 constexpr bool is_subset_of(const Subset &subset, const Superset &superset) {
@@ -80,9 +91,13 @@ constexpr bool is_subset_of(const Subset &subset, const Superset &superset) {
     return true;
   } else if constexpr (is_empty_set<Superset>) {
     return false;
+  } else if constexpr (type_traits::is_complete<
+                           custom_subset_check<Subset, Superset>>::value) {
+    return custom_subset_check<Subset, Superset>{}(subset, superset);
   } else if constexpr (std::is_base_of_v<Subset, Superset>) {
     return true;
-  } else if constexpr (std::ranges::range<Subset>) {
+  } else if constexpr (std::ranges::range<Subset> &&
+                       !is_infinite_range<Subset>) {
     for (const auto &element : subset) {
       if (!is_element_of(element, superset)) {
         return false;
@@ -96,8 +111,8 @@ constexpr bool is_subset_of(const Subset &subset, const Superset &superset) {
         },
         subset);
   } else {
-    static_assert(false, "No implementation for is_subset_of found!");
-    return false;
+    return false; // static_assert(false, "No implementation for is_subset_of
+                  // found!");
   }
 }
 

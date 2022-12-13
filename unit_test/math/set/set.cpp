@@ -1,6 +1,5 @@
 
 #include <catch2/catch.hpp>
-#include <math/interval.hpp>
 #include <math/set/set.hpp>
 
 #include <array>
@@ -9,18 +8,15 @@
 namespace mock {
 struct NonComparable {};
 
-struct sub{
-  constexpr static bool contains(const auto&)
-  {
-    return false;
-  }
+struct sub {
+  constexpr static bool contains(const auto &) { return false; }
 };
 struct super : sub {};
 } // namespace mock
 
-using math::set::set;
 using math::set::is_element_of;
 using math::set::is_subset_of;
+using math::set::set;
 
 TEST_CASE("is_element_of for math::set::empty", "[]") {
   CHECK(is_element_of(math::set::empty{}, math::set::empty{}));
@@ -67,15 +63,12 @@ TEST_CASE("is_subset_of", "[]") {
   std::tuple subset{1, "hello"};
   std::tuple superset{"hello", 2, 4, 1};
   std::array<int, 3> not_a_subset{1, 2, 3};
-  math::interval interval{1, 2};
 
   CHECK(is_subset_of(math::set::empty{}, math::set::empty{}));
   CHECK(is_subset_of(math::set::empty{}, subset));
   CHECK(is_subset_of(math::set::empty{}, superset));
   CHECK(is_subset_of(math::set::empty{}, not_a_subset));
-  CHECK(is_subset_of(math::set::empty{}, interval));
   CHECK(is_subset_of(subset, superset));
-  CHECK(is_subset_of(interval, superset));
   CHECK(is_subset_of(mock::sub{}, mock::super{}));
   CHECK_FALSE(is_subset_of(not_a_subset, superset));
   CHECK_FALSE(is_subset_of(superset, subset));
