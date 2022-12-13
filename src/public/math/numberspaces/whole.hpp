@@ -4,6 +4,7 @@
 #include "math/integral_iterator.hpp"
 #include "math/numberspaces/natural.hpp"
 #include "math/set.hpp"
+#include <cmath>
 
 namespace math {
 namespace numberspaces {

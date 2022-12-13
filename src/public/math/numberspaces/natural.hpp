@@ -3,6 +3,7 @@
 #include "math/infinity.hpp"
 #include "math/integral_iterator.hpp"
 #include "math/set.hpp"
+#include <cmath>
 
 namespace math {
 namespace numberspaces {
