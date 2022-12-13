@@ -1,7 +1,8 @@
 
+#include <array>
 #include <catch2/catch.hpp>
-#include <math/set/operators.hpp>
-#include <math/set/set.hpp>
+#include <math/set.hpp>
+
 
 using math::set::empty;
 using math::set::is_element_of;

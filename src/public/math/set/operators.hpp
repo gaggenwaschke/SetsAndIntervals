@@ -2,8 +2,8 @@
 #pragma once
 
 #include "math/operations.hpp"
+#include "math/set/element_of.hpp"
 #include "math/set/flattening_view.hpp"
-#include "math/set/set.hpp"
 #include <ranges>
 
 // Conjunction

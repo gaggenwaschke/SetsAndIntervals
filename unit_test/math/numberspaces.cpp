@@ -2,7 +2,7 @@
 #include <catch2/catch.hpp>
 #include <math/infinity.hpp>
 #include <math/numberspaces.hpp>
-#include <math/set/set.hpp>
+#include <math/set.hpp>
 
 using namespace math::numberspaces;
 using namespace math::set;

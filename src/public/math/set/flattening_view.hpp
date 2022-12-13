@@ -1,9 +1,10 @@
 
 #pragma once
 
+#include <math/set/element_of.hpp>
 #include <math/set/empty.hpp>
-#include <math/set/set.hpp>
 #include <tuple>
+
 
 namespace math {
 namespace set {

@@ -1,7 +1,9 @@
 
+#include <array>
 #include <catch2/catch.hpp>
 #include <math/operations.hpp>
 #include <math/set/flattening_view.hpp>
+#include <vector>
 
 using math::operations::disjunction;
 using math::set::empty;

@@ -3,8 +3,7 @@
 
 #include "math/integral_iterator.hpp"
 #include "math/numberspaces.hpp"
-#include "math/set/empty.hpp"
-#include "math/set/set.hpp"
+#include "math/set.hpp"
 #include <limits>
 #include <type_traits>
 

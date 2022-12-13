@@ -2,8 +2,7 @@
 #include <catch2/catch.hpp>
 #include <math/interval.hpp>
 #include <math/numberspaces.hpp>
-#include <math/set/empty.hpp>
-#include <math/set/set.hpp>
+#include <math/set.hpp>
 
 using math::interval;
 using math::numberspaces::integer;

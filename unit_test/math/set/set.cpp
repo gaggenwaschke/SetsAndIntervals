@@ -1,6 +1,6 @@
 
 #include <catch2/catch.hpp>
-#include <math/set/set.hpp>
+#include <math/set.hpp>
 
 #include <array>
 #include <vector>
