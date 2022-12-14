@@ -76,3 +76,40 @@ TEST_CASE("math::set operator symmetric difference", "[math::set][operators]") {
   CHECK_FALSE(is_element_of(5, symm_difference));
   CHECK_FALSE(is_element_of(mock::NonComparable{}, symm_difference));
 }
+
+TEST_CASE("operators for std::true_type and std::false_type", "[logic]") {
+  CHECK(std::is_same_v<std::true_type,
+                       decltype(std::true_type{} || std::true_type{})>);
+  CHECK(std::is_same_v<std::true_type,
+                       decltype(std::false_type{} || std::true_type{})>);
+  CHECK(std::is_same_v<std::true_type,
+                       decltype(std::true_type{} || std::false_type{})>);
+  CHECK(std::is_same_v<std::false_type,
+                       decltype(std::false_type{} || std::false_type{})>);
+  CHECK(std::is_same_v<std::true_type, decltype(std::true_type{} || true)>);
+  CHECK(std::is_same_v<std::true_type, decltype(std::true_type{} || false)>);
+  CHECK(std::is_same_v<std::true_type, decltype(true || std::true_type{})>);
+  CHECK(std::is_same_v<std::true_type, decltype(false || std::true_type{})>);
+
+  CHECK(std::is_same_v<std::true_type,
+                       decltype(std::true_type{} && std::true_type{})>);
+  CHECK(std::is_same_v<std::false_type,
+                       decltype(std::false_type{} && std::true_type{})>);
+  CHECK(std::is_same_v<std::false_type,
+                       decltype(std::true_type{} && std::false_type{})>);
+  CHECK(std::is_same_v<std::false_type,
+                       decltype(std::false_type{} && std::false_type{})>);
+  CHECK(std::is_same_v<std::false_type, decltype(std::false_type{} && true)>);
+  CHECK(std::is_same_v<std::false_type, decltype(std::false_type{} && false)>);
+  CHECK(std::is_same_v<std::false_type, decltype(true && std::false_type{})>);
+  CHECK(std::is_same_v<std::false_type, decltype(false && std::false_type{})>);
+
+  CHECK(std::is_same_v<std::false_type,
+                       decltype(std::true_type{} ^ std::true_type{})>);
+  CHECK(std::is_same_v<std::true_type,
+                       decltype(std::false_type{} ^ std::true_type{})>);
+  CHECK(std::is_same_v<std::true_type,
+                       decltype(std::true_type{} ^ std::false_type{})>);
+  CHECK(std::is_same_v<std::false_type,
+                       decltype(std::false_type{} ^ std::false_type{})>);
+}

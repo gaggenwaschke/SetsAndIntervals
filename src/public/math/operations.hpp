@@ -25,3 +25,61 @@ struct symmetric_difference_type {
 };
 constexpr symmetric_difference_type symmetric_difference{};
 } // namespace math::operations
+
+// Standard operator overloads.
+// These conserve as much information about bool operations as possible
+// for compile time operations.
+
+constexpr std::true_type operator||(std::true_type, std::true_type) {
+  return {};
+}
+
+constexpr std::true_type operator||(std::false_type, std::true_type) {
+  return {};
+}
+
+constexpr std::true_type operator||(std::true_type, std::false_type) {
+  return {};
+}
+
+constexpr std::false_type operator||(std::false_type, std::false_type) {
+  return {};
+}
+
+constexpr std::true_type operator||(std::true_type, bool) { return {}; }
+constexpr std::true_type operator||(bool, std::true_type) { return {}; }
+
+constexpr std::true_type operator&&(std::true_type, std::true_type) {
+  return {};
+}
+
+constexpr std::false_type operator&&(std::false_type, std::true_type) {
+  return {};
+}
+
+constexpr std::false_type operator&&(std::true_type, std::false_type) {
+  return {};
+}
+
+constexpr std::false_type operator&&(std::false_type, std::false_type) {
+  return {};
+}
+
+constexpr std::false_type operator&&(std::false_type, bool) { return {}; }
+constexpr std::false_type operator&&(bool, std::false_type) { return {}; }
+
+constexpr std::false_type operator^(std::true_type, std::true_type) {
+  return {};
+}
+
+constexpr std::true_type operator^(std::false_type, std::true_type) {
+  return {};
+}
+
+constexpr std::true_type operator^(std::true_type, std::false_type) {
+  return {};
+}
+
+constexpr std::false_type operator^(std::false_type, std::false_type) {
+  return {};
+}

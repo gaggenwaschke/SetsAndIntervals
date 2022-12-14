@@ -12,8 +12,8 @@ add_executable(unit_test
     math/integral_iterator.cpp
     math/interval.cpp
     math/numberspaces.cpp
+    math/operations.cpp
     math/set/flattening_view.cpp
-    math/set/operators.cpp
     math/set/set.cpp)
     
 target_link_libraries(unit_test PRIVATE
