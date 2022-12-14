@@ -1,4 +1,4 @@
-name: clang-14
+name: clang-13
 
 on:
   push:
@@ -9,6 +9,6 @@ jobs:
   unit_test:
     uses: ./.github/workflows/generic.yaml
     with:
-      compiler_install_name: clang-14
-      compiler_run_name: clang++-14
+      compiler_install_name: clang-13
+      compiler_run_name: clang++-13
       
