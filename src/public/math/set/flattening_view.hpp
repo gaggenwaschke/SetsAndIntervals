@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <functional>
 #include <math/set/element_of.hpp>
 #include <math/set/empty.hpp>
 #include <tuple>
@@ -18,13 +19,12 @@ template <typename FlatteningOperation, typename... Sets>
   requires(set<Sets> && ...)
 struct flattening_view {
   // Constructors.
-  constexpr flattening_view(FlatteningOperation, const Sets &...sets) noexcept
-      : sets{sets...} {
-    static_assert(::math::set::set<flattening_view>,
-                  "math::set::flattening_view must work as a set.");
-  }
+  constexpr flattening_view(FlatteningOperation flattening_operation,
+                            const Sets &...sets) noexcept
+      : flattening_operation{flattening_operation}, sets{sets...} {}
 
   // Members.
+  FlatteningOperation flattening_operation;
   std::tuple<const Sets &...> sets;
 };
 
@@ -34,10 +34,11 @@ struct custom_is_element_of<Value,
   constexpr auto
   operator()(const Value &value,
              const flattening_view<FlatteningOperation, Sets...> &view) {
+    const auto &operation = view.flattening_operation;
     return std::apply(
-        [&value](const auto &...sets) {
-          return FlatteningOperation{}(
-              ::math::set::is_element_of(value, sets)...);
+        [&value, operation](const Sets &...sets) {
+          return std::invoke(operation,
+                             is_element_of<Value, Sets>(value, sets)...);
         },
         view.sets);
   }

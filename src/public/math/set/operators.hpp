@@ -22,7 +22,7 @@ constexpr auto operator&(const math::set::set auto &left,
 // Disjunction
 
 constexpr auto operator|(math::set::set auto &left,
-                         math::set::set auto &right) noexcept {
+                         math::set::set auto &right) {
   if constexpr (math::set::is_empty_set<decltype(left)>) {
     return right;
   } else if constexpr (math::set::is_empty_set<decltype(right)>) {
@@ -36,7 +36,7 @@ constexpr auto operator|(math::set::set auto &left,
 // Symmetric Difference
 
 constexpr auto operator^(math::set::set auto &left,
-                         math::set::set auto &right) noexcept {
+                         math::set::set auto &right) {
   if constexpr (math::set::is_empty_set<decltype(left)>) {
     return right;
   } else if constexpr (math::set::is_empty_set<decltype(right)>) {

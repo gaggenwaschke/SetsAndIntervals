@@ -16,6 +16,8 @@ TEST_CASE("flattening_view", "[flattening_view][math::set]") {
   std::vector<int> b{3, 4};
 
   flattening_view view{disjunction, a, b};
+  static_assert(::math::set::set<decltype(view)>,
+                "math::set::flattening_view must work as a set.");
 
   CHECK(is_element_of(empty{}, view));
   CHECK_FALSE(is_element_of(0, view));
