@@ -5,7 +5,6 @@
 #include <math/set/empty.hpp>
 #include <tuple>
 
-
 namespace math {
 namespace set {
 /**
@@ -32,7 +31,7 @@ struct flattening_view {
 template <typename Value, typename FlatteningOperation, typename... Sets>
 struct custom_is_element_of<Value,
                             flattening_view<FlatteningOperation, Sets...>> {
-  constexpr bool
+  constexpr auto
   operator()(const Value &value,
              const flattening_view<FlatteningOperation, Sets...> &view) {
     return std::apply(
